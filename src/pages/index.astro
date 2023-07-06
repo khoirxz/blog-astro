@@ -1,36 +1,32 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Card from '../components/Card.astro';
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/Header.astro";
+import Card from "../components/Card.astro";
+import { SITE_TITLE, SITE_DESC } from "../consts";
+import { getCollection } from "astro:content";
+
+const posts = (await getCollection("blog")).sort(
+	(a, b) => a.data.pubDate.valueOf() - b.data.pubDate.valueOf()
+);
 ---
 
 <Layout title="Rizqi Blog.">
 	<main>
-		<h1>Welcome Rizqi Blog <span class="text-gradient">Astro</span></h1>
-		<p class="instructions">
-			To get started, open the directory <code>src/pages</code> in your project.<br />
-			<strong>Code Challenge:</strong> Tweak the "Welcome to Astro" message above.
-		</p>
+		<Header>
+			<h1>{SITE_TITLE}</h1>
+			<p>{SITE_DESC}</p>
+		</Header>
+
 		<ul role="list" class="link-card-grid">
-			<Card
-				href="https://docs.astro.build/"
-				title="Documentation"
-				body="Learn how Astro works and explore the official API docs."
-			/>
-			<Card
-				href="https://astro.build/integrations/"
-				title="Integrations"
-				body="Supercharge your project with new frameworks and libraries."
-			/>
-			<Card
-				href="https://astro.build/themes/"
-				title="Themes"
-				body="Explore a galaxy of community-built starter themes."
-			/>
-			<Card
-				href="https://astro.build/chat/"
-				title="Community"
-				body="Come say hi to our amazing Discord community. ❤️"
-			/>
+			{
+				posts.map((post) => (
+					<Card
+						href={`/blog/${post.slug}`}
+						title={post.data.title}
+						body={post.data.description}
+					/>
+				))
+			}
 		</ul>
 	</main>
 </Layout>
@@ -74,7 +70,8 @@ import Card from '../components/Card.astro';
 	}
 	.link-card-grid {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(24ch, 1fr));
+		/* grid-template-columns: repeat(auto-fit, minmax(24ch, 1fr)); */
+		grid-template-columns: 1fr;
 		gap: 1rem;
 		padding: 0;
 	}

@@ -1,5 +1,8 @@
 ---
 import { CollectionEntry, getCollection } from "astro:content";
+import Header from "../../components/Header.astro";
+import Layout from "../../layouts/Layout.astro";
+import { SITE_TITLE } from "../../consts";
 
 export async function getStaticPaths() {
     const posts = await getCollection("blog");
@@ -14,7 +17,48 @@ const post = Astro.props;
 const { Content } = await post.render();
 ---
 
-<main>
-    <h1>{post.data.title}</h1>
-    <Content />
-</main>
+<Layout title={`${SITE_TITLE} - ${post.data.title}`}>
+    <nav>
+        <a class="btn-home" href="/">
+            <img src="/assets/nav/house.svg" alt="home" />
+        </a>
+    </nav>
+    <main>
+        <Header>
+            <h1 class="title-post">{post.data.title}</h1>
+        </Header>
+
+        <div class="content-container">
+            <Content />
+        </div>
+    </main>
+</Layout>
+<style>
+    main {
+        margin: auto;
+        padding: 1.5rem;
+        max-width: 75ch;
+        color: #2e2e2e;
+    }
+    .title-post {
+        font-size: 42px;
+    }
+    nav {
+        display: flex;
+        justify-content: center;
+    }
+    .btn-home {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: #fa93e7;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: background-color 500ms linear;
+    }
+    .btn-home:hover {
+        background-color: #da62c4;
+        transition: background-color 500ms linear;
+    }
+</style>
